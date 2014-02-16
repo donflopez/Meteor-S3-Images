@@ -5,6 +5,7 @@ S3 provides a simple way of uploading files to the Amazon S3 service. This is us
 
 ##Improvements
 
+* **New** Now you can add aditional data with oData='some data or object'.
 * Specific support for images.
 * Now you can add a max width and height for resize an image before send to S3.
 * You have two session variables for get the upload state and the url in the client side easily.
@@ -37,7 +38,7 @@ Create an S3 input with a callback. CLIENT SIDE.
 All in px.
 
 ``` handlebars
-{{#S3 callback="callbackFunction" height=900 width=700}}
+{{#S3 callback="callbackFunction" height=900 width=700 oData="other optional data for use on server side"}}
 	<input type="file">
 {{/S3}}
 ```
@@ -47,8 +48,8 @@ Create a callback function that will handle what to do with the generated URL. S
 
 ``` javascript
 Meteor.methods({
-	callbackFunction:function(url,context){
-		console.log('Add '+url+' to the id of '+context);
+	callbackFunction:function(url,imageData){
+		console.log('Add '+url+' and other aditional data '+imageData);
 	}
 });
 ```

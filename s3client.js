@@ -2,9 +2,10 @@ Handlebars.registerHelper('S3', function (options) {
 	var uploadOptions = options.hash;
 	var template = options.fn;
 	var callback = uploadOptions.callback;
-	var context = this;
-
-	console.log(uploadOptions);
+	if(uploadOptions.oData)
+		var imageData = uploadOptions.oData;
+	else
+		var imageData = 'No data';
 
     if (!template) return;
 
@@ -23,19 +24,14 @@ Handlebars.registerHelper('S3', function (options) {
 					size:file.size,
 					type:file.type
 				};
+
+				//Setting uploading to true.
+
 				Session.set('uploading', true);
+
+
 				if (!file.type.match(/image.*/)&&!uploadOptions.width) {
-					console.log('This file is not an image');
-
-					reader.onload = function () {
-	          fileData.data = new Uint8Array(reader.result);
-	          Meteor.call("S3upload",fileData,context,callback, function(err, url){
-	                  Session.set('S3url', url);
-	                  Session.set('uploading', false);
-	          });
-	  			};
-
-	  			reader.readAsArrayBuffer(file);
+					Session.set('uploading', false);
 				}
 				else{
 					//IMAGE CANVAS
@@ -81,7 +77,7 @@ Handlebars.registerHelper('S3', function (options) {
 
 						//fileData.data = new Uint8Array(reader.result);
 						fileData.data = ua;
-						Meteor.call("S3upload",fileData,context,callback, function(err, url){
+						Meteor.call("S3upload",fileData,imageData,callback, function(err, url){
 							Session.set('S3url', url);
 							Session.set('uploading', false);
 						});
